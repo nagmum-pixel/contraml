@@ -1167,7 +1167,7 @@ tbody tr:hover { background: rgba(5,245,160,.025); }
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURATION — CHANGE PASSWORDS HERE
 // ═══════════════════════════════════════════════════════════════
-const ADMIN = { user:"admin", pass:"contra@admin123" };
+const ADMIN = { user:"admin", pass:"3482fc130254d206aecd1053e8fa98b228ac7ca3cd6ec710d3b9511938f9172e" };
 
 // ═══════════════════════════════════════════════════════════════
 // TELEGRAM ALERTS CONFIG
@@ -1256,12 +1256,12 @@ const SECTOR_MAP = {
   "CHEMICALS": ["PIDILITIND","DEEPAKNTR","NAVINFLUOR","FLUOROCHEM"]
 };
 const VIEWERS = [
-  { user:"friend1", pass:"view@1111" },
-  { user:"friend2", pass:"view@2222" },
-  { user:"friend3", pass:"view@3333" },
-  { user:"friend4", pass:"view@4444" },
-  { user:"friend5", pass:"view@5555" },
-  { user:"friend6", pass:"view@6666" },
+  { user:"friend1", pass:"4348d6fb6a63306c65944ed0194d8fc430f9f032ae82357e38d94c9da893f3e4" },
+  { user:"friend2", pass:"2b199b06f6711cb352bfcef1d006ac1b5c87ed33828e7aab36bf6b36b5f72710" },
+  { user:"friend3", pass:"6935f44d53a3d0a17bcf9e906e6d2dfc06ae938170894dfd40071e6e343d037b" },
+  { user:"friend4", pass:"9b7482eec4e9643b2b1e19f6f9ac1dc1291613750ee18798e2b5917704fbbbe4" },
+  { user:"friend5", pass:"05b7e1da2fc8656b3b13c095ae6ae095cdc8bd6a5cff38403753f043d56e8bb5" },
+  { user:"friend6", pass:"a4a85f2225089c6bb49be2ccfd6b23e471ecbca3a9c9b6593cfc63e12c9fd7ee" },
 ];
 
 // ═══════════════════════════════════════════════════════════════
@@ -1527,7 +1527,7 @@ function togglePass() {
   else { inp.type='password'; btn.textContent='👁'; }
 }
 
-function doLogin() {
+async function doLogin() {
   const u = document.getElementById('inUser').value.trim().toLowerCase();
   const p = document.getElementById('inPass').value.trim();
   const err = document.getElementById('loginErr');
@@ -1535,14 +1535,17 @@ function doLogin() {
   document.getElementById('inUser').classList.remove('err');
   document.getElementById('inPass').classList.remove('err');
 
-  if(u === ADMIN.user && p === ADMIN.pass) {
+  // Hash the typed password with SHA-256 before comparing
+  const hashBuf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(p));
+  const ph = Array.from(new Uint8Array(hashBuf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+
+  if(u === ADMIN.user && ph === ADMIN.pass) {
     role = 'admin'; sessionStorage.setItem('contra_role','admin');
     launchApp(false);
-  } else if(VIEWERS.find(v=>v.user===u&&v.pass===p)) {
+  } else if(VIEWERS.find(v=>v.user===u&&v.pass===ph)) {
     role = 'viewer'; sessionStorage.setItem('contra_role','viewer');
     launchApp(false);
   } else if(VIEWERS.find(v=>v.user===u)) {
-    // Username correct but wrong password
     err.textContent = '❌ Wrong password. Check exact password sent to you.';
     document.getElementById('inPass').classList.add('err');
     document.getElementById('inPass').value = '';
