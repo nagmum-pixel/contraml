@@ -696,10 +696,6 @@ tbody td{padding:11px 14px;font-size:13px}
     </div>
     <div class="login-err" id="loginErr"></div>
     <button class="login-btn" onclick="doLogin()">CONNECT →</button>
-    <div style="margin-top:20px;background:var(--s2);border-radius:10px;padding:14px;font-size:12px;color:var(--muted2);line-height:1.9">
-      <b style="color:var(--text)">Your login credentials:</b><br>
-      <span id="credHint"></span>
-    </div>
   </div>
 </div>
 
@@ -1170,9 +1166,6 @@ function onDataReady(online) {
 function showLogin(online) {
   document.getElementById('loadScreen').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
-  // Show all credentials on login screen
-  const hint = VIEWERS.map(v=>`👤 ${v.user} / ${v.pass}`).join('<br>');
-  document.getElementById('credHint').innerHTML = hint;
 }
 
 function launchApp(online) {
@@ -1271,14 +1264,6 @@ function doLogin() {
     document.getElementById('inUser').classList.add('err');
     document.getElementById('inPass').classList.add('err');
     document.getElementById('inPass').value = '';
-    // Show credentials hint
-    const hint = document.getElementById('loginHint');
-    if(hint) {
-      hint.style.display = 'block';
-      hint.innerHTML = '<div style="color:var(--green);font-weight:700;margin-bottom:6px">Available logins:</div>' +
-        '<div>admin / contra@admin123</div>' +
-        VIEWERS.map(v=>`<div>${v.user} / ${v.pass}</div>`).join('');
-    }
     setTimeout(()=>{ err.textContent=''; }, 4000);
   }
 }
